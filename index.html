@@ -1,0 +1,155 @@
+<!doctype html><html><head><meta charset='utf-8'><title>BEST Fit Talent Hub</title><style>
+:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#F5F4F0;color:#1a1a1a}
+.wrap{max-width:1100px;margin:0 auto;padding:1.5rem}.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.header h1{font-size:20px;font-weight:600;margin:0;color:#0B3D2E}.badge{background:#0B3D2E;color:#fff;font-size:12px;padding:4px 10px;border-radius:12px}
+.header-right{display:flex;align-items:center;gap:10px}.who{font-size:12px;color:#6b6b66}
+.card{background:#fff;border:1px solid #E2E0D8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}.card h2{font-size:15px;font-weight:600;margin:0 0 10px;color:#0B3D2E}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}input[type=text],input[type=date],input[type=password],input[type=email],select{border:1px solid #D3D1C7;border-radius:6px;padding:7px 10px;font-size:13px}
+button{background:#0B3D2E;color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:13px;cursor:pointer}button.secondary{background:#fff;color:#0B3D2E;border:1px solid #0B3D2E}
+button:disabled{opacity:.5;cursor:not-allowed}table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}th{text-align:left;color:#6b6b66;font-weight:500;padding:6px 8px;border-bottom:1px solid #E2E0D8}
+td{padding:6px 8px;border-bottom:1px solid #F0EEE8}.warn{color:#a3572d}.tabs{display:flex;gap:6px;margin-bottom:1rem}.tab{padding:7px 14px;font-size:13px;border-radius:6px;cursor:pointer;background:#fff;border:1px solid #D3D1C7}
+.tab.active{background:#0B3D2E;color:#fff;border-color:#0B3D2E}.board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.col{background:#F5F4F0;border-radius:10px;padding:8px;min-height:60px}
+.col-title{font-size:12px;color:#6b6b66;margin:2px 6px 8px;display:flex;justify-content:space-between}.sc{background:#fff;border:1px solid #E2E0D8;border-radius:8px;padding:9px 10px;margin-bottom:8px;cursor:pointer}
+.sc:hover{border-color:#0B3D2E}.result-row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid #F0EEE8;cursor:pointer}.result-row:hover{background:#FAFAF7}
+.pill{font-size:11px;padding:2px 8px;border-radius:10px}.detail{background:#F5F4F0;border-radius:8px;padding:12px;margin-top:10px;display:none}.muted{color:#8a8a84;font-size:12px}
+.log{font-size:12px;color:#5F5E5A;margin-top:8px;white-space:pre-wrap}.gate{max-width:360px;margin:4rem auto;text-align:center}.grid-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:8px}
+.errtext{color:#a3572d;font-size:12px;margin-top:8px;min-height:16px}
+</style></head><body>
+<section>
+<div id='gate' class='gate'><div class='card'>
+<h2>BEST Fit Talent Hub</h2>
+<p class='muted'>Sign in with your BEST Fit account.</p>
+<input type='email' id='email-input' placeholder='Email' style='width:100%;margin-bottom:8px;' autocomplete='username'/>
+<input type='password' id='pw-input' placeholder='Password' style='width:100%;margin-bottom:8px;' autocomplete='current-password'/>
+<button id='login-btn' style='width:100%;'>Sign in</button>
+<div class='errtext' id='login-err'></div>
+</div></div>
+</section>
+<section>
+<div id='app' class='wrap' style='display:none;'>
+<div class='header'><h1>BEST Fit Talent Hub</h1>
+<div class='header-right'><span class='who' id='who-badge'></span><span class='badge' id='count-badge'>Loading…</span><button class='secondary' id='logout-btn'>Sign out</button></div>
+</div>
+<div class='tabs'><div class='tab active' data-tab='candidates'>Candidates</div><div class='tab' data-tab='searches'>Searches</div></div>
+<div id='tab-candidates'>
+<div class='card'><h2>Import from CSV</h2><p class='muted' style='margin-top:0;'>Headers should match: Name, Current role, Current company, Function, Seniority, Industry, Location, Relationship status, Last touch date, Search outcome, Strategic score, Execution score, Influence score, CliftonStrengths top domains, Assessment notes, Consent contact preference, Data source, Date added.</p>
+<div class='row'><input type='file' id='csv-file' accept='.csv'/><button class='secondary' id='parse-btn'>Preview</button><button id='import-btn' disabled>Import to Notion</button></div>
+<div id='preview-wrap'></div><div class='log' id='import-log'></div></div>
+<div class='card'><h2>Search the database</h2><div class='row' style='margin-bottom:10px;'>
+<input type='text' id='q' placeholder='Search by name, role, or company' style='flex:1;min-width:200px;'/>
+<select id='f-function'><option value=''>Function: all</option><option>Finance</option><option>Sales</option><option>Operations</option><option>Digital</option><option>HR</option></select>
+<select id='f-seniority'><option value=''>Seniority: all</option><option>C-suite</option><option>VP</option><option>Director</option><option>Head of function</option></select>
+<select id='f-industry'><option value=''>Industry: all</option><option>Automotive</option><option>Retail</option><option>Hospitality</option><option>Private equity</option><option>FMCG</option><option>Other</option></select>
+<select id='f-status'><option value=''>Status: all</option><option>Cold-mapped</option><option>Contacted</option><option>Engaged</option><option>Placed</option><option>Do-not-approach</option></select>
+<button class='secondary' id='refresh-c-btn'>Refresh</button></div><p class='muted' id='result-count'></p><div id='results'></div><div class='detail' id='c-detail'></div></div></div>
+<div id='tab-searches' style='display:none;'>
+<div class='card'><h2>New search</h2><div class='grid-form'>
+<input type='text' id='n-name' placeholder='Role — Client' style='grid-column:span 2;'/><input type='text' id='n-client' placeholder='Client name'/>
+<select id='n-function'><option value=''>Function</option><option>Finance</option><option>Sales</option><option>Operations</option><option>Digital</option><option>HR</option></select>
+<select id='n-seniority'><option value=''>Seniority</option><option>C-suite</option><option>VP</option><option>Director</option><option>Head of function</option></select>
+<select id='n-stage'><option>Mapping</option><option>Assessment</option><option>Shortlist</option><option>Placement</option></select>
+<input type='date' id='n-due'/><input type='text' id='n-consultant' placeholder='Consultant'/></div><button id='create-btn'>Add search</button><div class='log' id='create-log'></div></div>
+<div class='card'><div class='row' style='justify-content:space-between;margin-bottom:8px;'><h2 style='margin:0;'>Board by stage</h2><button class='secondary' id='refresh-s-btn'>Refresh</button></div>
+<div class='board' id='board'></div><div class='detail' id='s-detail'></div></div></div>
+</div>
+</section>
+<script>
+var API_BASE='https://uopmzcmnczdyreoivewk.supabase.co/functions/v1/bestfit-dashboard';
+var SUPABASE_URL='https://uopmzcmnczdyreoivewk.supabase.co';
+var SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvcG16Y21uY3pkeXJlb2l2ZXdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI5MjM3MTUsImV4cCI6MjA5ODQ5OTcxNX0.R_KgnRNwsin_wvFc-soeblt2Ax60ycVzWMA1WV1NUHE';
+var session=null;
+try{session=JSON.parse(localStorage.getItem('bf_session')||'null');}catch(e){session=null;}
+
+function saveSession(s){session=s;localStorage.setItem('bf_session',JSON.stringify(s));}
+function clearSession(){session=null;localStorage.removeItem('bf_session');}
+
+function authFetch(path,opts){
+  opts=opts||{};
+  opts.headers=Object.assign({'Authorization':'Bearer '+(session?session.access_token:''),'Content-Type':'application/json'},opts.headers||{});
+  return fetch(API_BASE+path,opts).then(function(r){
+    if(r.status===401){throw {code:401};}
+    return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'request failed');return j;});
+  });
+}
+
+function refreshSession(){
+  if(!session||!session.refresh_token)return Promise.reject('no refresh token');
+  return fetch(SUPABASE_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{'apikey':SUPABASE_ANON,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:session.refresh_token})})
+    .then(function(r){return r.json().then(function(j){if(!r.ok||!j.access_token)throw new Error('refresh failed');saveSession(j);return j;});});
+}
+
+function api(path,opts){
+  return authFetch(path,opts).catch(function(err){
+    if(err&&err.code===401){
+      return refreshSession().then(function(){return authFetch(path,opts);}).catch(function(){clearSession();showGate('Session expired. Please sign in again.');return Promise.reject(err);});
+    }
+    return Promise.reject(err);
+  });
+}
+
+function showGate(msg){
+  document.getElementById('app').style.display='none';
+  document.getElementById('gate').style.display='block';
+  document.getElementById('login-err').textContent=msg||'';
+}
+function showApp(){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('who-badge').textContent=(session&&session.user&&session.user.email)?session.user.email:'';
+  init();
+}
+
+document.getElementById('login-btn').addEventListener('click',function(){
+  var email=document.getElementById('email-input').value.trim();
+  var pw=document.getElementById('pw-input').value;
+  if(!email||!pw){document.getElementById('login-err').textContent='Enter your email and password.';return;}
+  document.getElementById('login-btn').disabled=true;
+  fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':SUPABASE_ANON,'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pw})})
+    .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j};});})
+    .then(function(res){
+      document.getElementById('login-btn').disabled=false;
+      if(!res.ok||!res.j.access_token){document.getElementById('login-err').textContent=res.j.error_description||res.j.msg||'Invalid email or password.';return;}
+      saveSession(res.j);
+      showApp();
+    })
+    .catch(function(err){document.getElementById('login-btn').disabled=false;document.getElementById('login-err').textContent='Login failed: '+err;});
+});
+document.getElementById('pw-input').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('login-btn').click();});
+document.getElementById('logout-btn').addEventListener('click',function(){clearSession();showGate('');});
+
+if(session&&session.access_token){showApp();}
+
+document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});t.classList.add('active');
+document.getElementById('tab-candidates').style.display=t.getAttribute('data-tab')==='candidates'?'block':'none';document.getElementById('tab-searches').style.display=t.getAttribute('data-tab')==='searches'?'block':'none';});});
+var allCandidates=[];var parsedRows=[];var VALID={'Function':['Finance','Sales','Operations','Digital','HR'],'Seniority':['C-suite','VP','Director','Head of function'],'Industry':['Automotive','Retail','Hospitality','Private equity','FMCG','Other'],'Relationship status':['Cold-mapped','Contacted','Engaged','Placed','Do-not-approach']};
+var NUMERIC=['Strategic score','Execution score','Influence score'];
+function parseCSV(text){var rows=[];var row=[];var field='';var inQuotes=false;for(var i=0;i<text.length;i++){var c=text[i];if(inQuotes){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{inQuotes=false;}}else field+=c;}else{if(c==='"')inQuotes=true;else if(c===',' ){row.push(field);field='';}else if(c==='\r'){}else if(c==='\n'){row.push(field);rows.push(row);row=[];field='';}else field+=c;}}if(field.length>0||row.length>0){row.push(field);rows.push(row);}return rows.filter(function(r){return r.length>1||(r[0]&&r[0].trim()!=='');});}
+document.getElementById('parse-btn').addEventListener('click',function(){var f=document.getElementById('csv-file').files[0];if(!f){alert('Choose a CSV file first.');return;}var reader=new FileReader();reader.onload=function(e){var rows=parseCSV(e.target.result);if(rows.length<2){document.getElementById('preview-wrap').innerHTML="<p class='warn'>No data rows found.</p>";return;}var headers=rows[0].map(function(h){return h.trim();});parsedRows=rows.slice(1).map(function(r){var obj={};headers.forEach(function(h,idx){obj[h]=(r[idx]||'').trim();});return obj;});renderPreview(headers);document.getElementById('import-btn').disabled=parsedRows.length===0;};reader.readAsText(f);});
+function renderPreview(headers){var html='<table><tr>'+headers.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr>';parsedRows.slice(0,8).forEach(function(row){html+='<tr>'+headers.map(function(h){var v=row[h]||'';var bad=VALID[h]&&v&&VALID[h].indexOf(v)===-1;return '<td'+(bad?" class='warn'":'')+'>'+(v||'&mdash;')+(bad?' ?':'')+'</td>';}).join('')+'</tr>';});html+='</table><p class=\'muted\'>'+parsedRows.length+' row(s) parsed. Showing first 8.</p>';document.getElementById('preview-wrap').innerHTML=html;}
+function buildProps(row){var props={};Object.keys(row).forEach(function(k){var v=row[k];if(v===''||v===undefined)return;if(NUMERIC.indexOf(k)!==-1){var n=Number(v);if(!isNaN(n))props[k]=n;}else props[k]=v;});return props;}
+function logLine(id,text){var el=document.getElementById(id);el.textContent+=(el.textContent?'\n':'')+text;}
+document.getElementById('import-btn').addEventListener('click',function(){document.getElementById('import-btn').disabled=true;document.getElementById('import-log').textContent='';var i=0;var done=0,failed=0;
+function next(){if(i>=parsedRows.length){logLine('import-log','Done. '+done+' imported, '+failed+' failed.');document.getElementById('import-btn').disabled=false;loadCandidates();return;}var row=parsedRows[i];api('/api/candidates',{method:'POST',body:JSON.stringify({properties:buildProps(row)})}).then(function(){done++;logLine('import-log','Row '+(i+1)+'/'+parsedRows.length+' imported.');}).catch(function(err){failed++;logLine('import-log','Row '+(i+1)+' failed: '+err);}).then(function(){i++;next();});}next();});
+function loadCandidates(){document.getElementById('count-badge').textContent='Loading…';api('/api/candidates').then(function(res){allCandidates=(res.results||[]).map(function(r){return{id:r.id,name:r.Name||'',role:r['Current role']||'',company:r['Current company']||'',fn:r.Function||'',sen:r.Seniority||'',ind:r.Industry||'',loc:r.Location||'',status:r['Relationship status']||'',strategic:r['Strategic score'],execution:r['Execution score'],influence:r['Influence score'],strengths:r['CliftonStrengths top domains']||'',notes:r['Assessment notes']||'',consent:r['Consent contact preference']||''};});document.getElementById('count-badge').textContent=allCandidates.length+' candidates';applyFilters();}).catch(function(err){document.getElementById('count-badge').textContent='Error';});}
+function applyFilters(){var q=document.getElementById('q').value.toLowerCase();var fn=document.getElementById('f-function').value;var sen=document.getElementById('f-seniority').value;var ind=document.getElementById('f-industry').value;var status=document.getElementById('f-status').value;
+var filtered=allCandidates.filter(function(c){if(q&&[c.name,c.role,c.company].join(' ').toLowerCase().indexOf(q)===-1)return false;if(fn&&c.fn!==fn)return false;if(sen&&c.sen!==sen)return false;if(ind&&c.ind!==ind)return false;if(status&&c.status!==status)return false;return true;});
+document.getElementById('result-count').textContent=filtered.length+' candidate(s) found';var wrap=document.getElementById('results');wrap.innerHTML='';filtered.forEach(function(c){var div=document.createElement('div');div.className='result-row';
+div.innerHTML="<div><div>"+(c.name||'(no name)')+"</div><div class='muted'>"+c.role+(c.company?' — '+c.company:'')+"</div></div><span class='pill'>"+(c.status||'—')+"</span>";
+div.addEventListener('click',function(){var d=document.getElementById('c-detail');d.style.display='block';d.innerHTML='<strong>'+c.name+'</strong><div class=\'muted\' style=\'margin:4px 0 8px;\'>'+[c.fn,c.sen,c.ind,c.loc].filter(Boolean).join(' · ')+'</div><div>Scores — strategic '+(c.strategic??'—')+', execution '+(c.execution??'—')+', influence '+(c.influence??'—')+'</div><div style=\'margin-top:6px;\'>Strengths: '+(c.strengths||'—')+'</div><div style=\'margin-top:6px;\'>Notes: '+(c.notes||'—')+'</div>';});wrap.appendChild(div);});}
+['q','f-function','f-seniority','f-industry','f-status'].forEach(function(id){document.getElementById(id).addEventListener('input',applyFilters);document.getElementById(id).addEventListener('change',applyFilters);});
+document.getElementById('refresh-c-btn').addEventListener('click',loadCandidates);
+var STAGES=['Mapping','Assessment','Shortlist','Placement'];var searches=[];var nameByUrl={};
+function loadSearches(){Promise.all([api('/api/searches'),api('/api/candidates')]).then(function(arr){var sRes=arr[0];var cRes=arr[1];nameByUrl={};(cRes.results||[]).forEach(function(c){nameByUrl[c.id]=c.Name||'Unnamed';});
+searches=(sRes.results||[]).map(function(r){return{id:r.id,url:r.url,name:r.Name||'(untitled)',client:r.Client||'',fn:r.Function||'',sen:r.Seniority||'',stage:r.Stage||'Mapping',due:r['Due date']||'',consultant:r.Consultant||'',candidateIds:r.Candidates||[]};});renderBoard();}).catch(function(err){document.getElementById('board').innerHTML="<p class='muted'>Error loading.</p>";});}
+function renderBoard(){var board=document.getElementById('board');board.innerHTML='';STAGES.forEach(function(stage){var col=document.createElement('div');col.className='col';var items=searches.filter(function(s){return s.stage===stage;});
+var title=document.createElement('div');title.className='col-title';title.innerHTML='<span>'+stage+'</span><span>'+items.length+'</span>';col.appendChild(title);
+items.forEach(function(s){var card=document.createElement('div');card.className='sc';card.innerHTML="<p style='font-size:12px;font-weight:600;margin:0;'>"+s.name+"</p><p class='muted' style='margin:3px 0 0;font-size:11px;'>"+(s.client?s.client+' · ':'')+(s.due||'no due date')+"</p><p class='muted' style='margin:3px 0 0;font-size:11px;'>"+s.candidateIds.length+' candidate(s) linked</p>';
+card.addEventListener('click',function(){var d=document.getElementById('s-detail');d.style.display='block';var names=s.candidateIds.map(function(id){return nameByUrl[id]||id;});d.innerHTML='<strong>'+s.name+'</strong><div class=\'muted\' style=\'margin:4px 0 8px;\'>'+[s.client,s.fn,s.sen,s.consultant].filter(Boolean).join(' · ')+'</div><div>Stage: '+s.stage+(s.due?' · Due '+s.due:'')+'</div><div style=\'margin-top:6px;\'>Linked candidates: '+(names.length?names.join(', '):'none yet')+'</div><div style=\'margin-top:8px;\'><a href=\''+s.url+'\' target=\'_blank\' rel=\'noopener noreferrer\'>Open in Notion</a></div>';});col.appendChild(card);});board.appendChild(col);});}
+document.getElementById('create-btn').addEventListener('click',function(){var name=document.getElementById('n-name').value.trim();if(!name){alert('Enter a role and client name first.');return;}var props={Name:name};
+var client=document.getElementById('n-client').value.trim();if(client)props['Client']=client;var fn=document.getElementById('n-function').value;if(fn)props['Function']=fn;var sen=document.getElementById('n-seniority').value;if(sen)props['Seniority']=sen;
+props['Stage']=document.getElementById('n-stage').value;var due=document.getElementById('n-due').value;if(due)props['Due date']=due;var consultant=document.getElementById('n-consultant').value.trim();if(consultant)props['Consultant']=consultant;
+document.getElementById('create-btn').disabled=true;api('/api/searches',{method:'POST',body:JSON.stringify({properties:props})}).then(function(){document.getElementById('create-log').textContent='Added "'+name+'".';['n-name','n-client','n-consultant'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('n-due').value='';loadSearches();}).catch(function(err){document.getElementById('create-log').textContent='Error: '+err;}).then(function(){document.getElementById('create-btn').disabled=false;});});
+document.getElementById('refresh-s-btn').addEventListener('click',loadSearches);
+function init(){loadCandidates();loadSearches();}
+</script>
+</body></html>
