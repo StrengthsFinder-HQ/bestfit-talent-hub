@@ -1,6 +1,6 @@
 <!doctype html><html><head><meta charset='utf-8'><title>BEST Fit Talent Hub</title><style>
 :root{color-scheme:light}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#F5F4F0;color:#1a1a1a}
-.wrap{max-width:1100px;margin:0 auto;padding:1.5rem}.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.wrap{max-width:1200px;margin:0 auto;padding:1.5rem}.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
 .header h1{font-size:20px;font-weight:600;margin:0;color:#0B3D2E}.badge{background:#0B3D2E;color:#fff;font-size:12px;padding:4px 10px;border-radius:12px}
 .header-right{display:flex;align-items:center;gap:10px}.who{font-size:12px;color:#6b6b66}
 .card{background:#fff;border:1px solid #E2E0D8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem}.card h2{font-size:15px;font-weight:600;margin:0 0 10px;color:#0B3D2E}
@@ -11,9 +11,11 @@ td{padding:6px 8px;border-bottom:1px solid #F0EEE8}.warn{color:#a3572d}.tabs{dis
 .tab.active{background:#0B3D2E;color:#fff;border-color:#0B3D2E}.board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.col{background:#F5F4F0;border-radius:10px;padding:8px;min-height:60px}
 .col-title{font-size:12px;color:#6b6b66;margin:2px 6px 8px;display:flex;justify-content:space-between}.sc{background:#fff;border:1px solid #E2E0D8;border-radius:8px;padding:9px 10px;margin-bottom:8px;cursor:pointer}
 .sc:hover{border-color:#0B3D2E}.result-row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid #F0EEE8;cursor:pointer}.result-row:hover{background:#FAFAF7}
-.pill{font-size:11px;padding:2px 8px;border-radius:10px}.detail{background:#F5F4F0;border-radius:8px;padding:12px;margin-top:10px;display:none}.muted{color:#8a8a84;font-size:12px}
+.pill{font-size:11px;padding:2px 8px;border-radius:10px;background:#EFEDE6}.detail{background:#F5F4F0;border-radius:8px;padding:14px;margin-top:10px;display:none}.muted{color:#8a8a84;font-size:12px}
 .log{font-size:12px;color:#5F5E5A;margin-top:8px;white-space:pre-wrap}.gate{max-width:360px;margin:4rem auto;text-align:center}.grid-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:8px}
 .errtext{color:#a3572d;font-size:12px;margin-top:8px;min-height:16px}
+.dsec{margin-bottom:12px}.dsec h4{margin:0 0 6px;font-size:12px;color:#0B3D2E;text-transform:uppercase;letter-spacing:.03em}
+.dgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 14px;font-size:12px}.dgrid div span{color:#8a8a84;display:block;font-size:10px;text-transform:uppercase;}
 </style></head><body>
 <section>
 <div id='gate' class='gate'><div class='card'>
@@ -32,15 +34,15 @@ td{padding:6px 8px;border-bottom:1px solid #F0EEE8}.warn{color:#a3572d}.tabs{dis
 </div>
 <div class='tabs'><div class='tab active' data-tab='candidates'>Candidates</div><div class='tab' data-tab='searches'>Searches</div></div>
 <div id='tab-candidates'>
-<div class='card'><h2>Import from CSV</h2><p class='muted' style='margin-top:0;'>Headers should match: Name, Current role, Current company, Function, Seniority, Industry, Location, Relationship status, Last touch date, Search outcome, Strategic score, Execution score, Influence score, CliftonStrengths top domains, Assessment notes, Consent contact preference, Data source, Date added.</p>
+<div class='card'><h2>Import from CSV</h2><p class='muted' style='margin-top:0;'>Headers must match Notion property names exactly (only the columns you have data for are required): Name, Target Position, Current Position, Current company, Industry, Location, Source, Recruitment Stage, Recruiter / PIC, Next Follow-up Date, Next Follow-up Action, Last Activity Date, Client PIC, Process Notes, Date of Birth, Place of Birth, Phone, Email, LinkedIn, Years of Experience, Education, Notice Period / Availability, Interview R1/R2/Client HR/Client User/Final Date, Interviewer, Status, Result, Interview Notes, Assessment Type, Assessment Status, Assessment Date, Security Assessment Type, Security Assessment Status, Security Assessment Date, Assessment Result, Assessment Notes, Current/Expected Nett Basic Salary, Performance Bonus, Bonus Shared, Incentive, Transport Allowance, Leave Days, Leave Allowance, Communication Allowance, Health Insurance, Other Benefit, Offered Salary &amp; Package, Final Salary, Offer Status, Placement Fee, Joining Date, Onboarding Status, Onboarding PIC, Onboarding Notes, Post-Placement Follow-up Date, Candidate Feedback, Client Feedback, Placement Status, Post-Placement Notes.</p>
 <div class='row'><input type='file' id='csv-file' accept='.csv'/><button class='secondary' id='parse-btn'>Preview</button><button id='import-btn' disabled>Import to Notion</button></div>
 <div id='preview-wrap'></div><div class='log' id='import-log'></div></div>
 <div class='card'><h2>Search the database</h2><div class='row' style='margin-bottom:10px;'>
-<input type='text' id='q' placeholder='Search by name, role, or company' style='flex:1;min-width:200px;'/>
-<select id='f-function'><option value=''>Function: all</option><option>Finance</option><option>Sales</option><option>Operations</option><option>Digital</option><option>HR</option></select>
-<select id='f-seniority'><option value=''>Seniority: all</option><option>C-suite</option><option>VP</option><option>Director</option><option>Head of function</option></select>
-<select id='f-industry'><option value=''>Industry: all</option><option>Automotive</option><option>Retail</option><option>Hospitality</option><option>Private equity</option><option>FMCG</option><option>Other</option></select>
-<select id='f-status'><option value=''>Status: all</option><option>Cold-mapped</option><option>Contacted</option><option>Engaged</option><option>Placed</option><option>Do-not-approach</option></select>
+<input type='text' id='q' placeholder='Search by name, position, or company' style='flex:1;min-width:200px;'/>
+<select id='f-industry'><option value=''>Industry: all</option><option>Automotive</option><option>Retail</option><option>Hospitality</option><option>Private equity</option><option>FMCG</option><option>Banking</option><option>Technology</option><option>Other</option></select>
+<select id='f-stage'><option value=''>Recruitment Stage: all</option><option>Active</option><option>On Hold</option><option>Inactive</option></select>
+<select id='f-assessment'><option value=''>Assessment: all</option><option>Not Started</option><option>Scheduled</option><option>Completed</option></select>
+<select id='f-placement'><option value=''>Placement: all</option><option>Active</option><option>Completed</option><option>Issue</option></select>
 <button class='secondary' id='refresh-c-btn'>Refresh</button></div><p class='muted' id='result-count'></p><div id='results'></div><div class='detail' id='c-detail'></div></div></div>
 <div id='tab-searches' style='display:none;'>
 <div class='card'><h2>New search</h2><div class='grid-form'>
@@ -121,8 +123,10 @@ if(session&&session.access_token){showApp();}
 
 document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});t.classList.add('active');
 document.getElementById('tab-candidates').style.display=t.getAttribute('data-tab')==='candidates'?'block':'none';document.getElementById('tab-searches').style.display=t.getAttribute('data-tab')==='searches'?'block':'none';});});
-var allCandidates=[];var parsedRows=[];var VALID={'Function':['Finance','Sales','Operations','Digital','HR'],'Seniority':['C-suite','VP','Director','Head of function'],'Industry':['Automotive','Retail','Hospitality','Private equity','FMCG','Other'],'Relationship status':['Cold-mapped','Contacted','Engaged','Placed','Do-not-approach']};
-var NUMERIC=['Strategic score','Execution score','Influence score'];
+
+var allCandidates=[];var parsedRows=[];
+var VALID={'Recruitment Stage':['Active','On Hold','Inactive'],'Assessment Status':['Not Started','Scheduled','Completed'],'Offer Status':['Pending','Accepted','Declined'],'Placement Status':['Active','Completed','Issue'],'Onboarding Status':['In Progress','Completed','Delayed','Cancelled']};
+var NUMERIC=['Years of Experience','Current Nett Basic Salary','Current Performance Bonus','Current Bonus Shared','Current Incentive','Current Transport Allowance','Current Leave Days','Current Leave Allowance','Current Communication Allowance','Expected Nett Basic Salary','Expected Performance Bonus','Expected Bonus Shared','Expected Incentive','Expected Transport Allowance','Expected Leave Days','Expected Leave Allowance','Expected Communication Allowance','Offered Salary & Package','Final Salary','Placement Fee'];
 function parseCSV(text){var rows=[];var row=[];var field='';var inQuotes=false;for(var i=0;i<text.length;i++){var c=text[i];if(inQuotes){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{inQuotes=false;}}else field+=c;}else{if(c==='"')inQuotes=true;else if(c===',' ){row.push(field);field='';}else if(c==='\r'){}else if(c==='\n'){row.push(field);rows.push(row);row=[];field='';}else field+=c;}}if(field.length>0||row.length>0){row.push(field);rows.push(row);}return rows.filter(function(r){return r.length>1||(r[0]&&r[0].trim()!=='');});}
 document.getElementById('parse-btn').addEventListener('click',function(){var f=document.getElementById('csv-file').files[0];if(!f){alert('Choose a CSV file first.');return;}var reader=new FileReader();reader.onload=function(e){var rows=parseCSV(e.target.result);if(rows.length<2){document.getElementById('preview-wrap').innerHTML="<p class='warn'>No data rows found.</p>";return;}var headers=rows[0].map(function(h){return h.trim();});parsedRows=rows.slice(1).map(function(r){var obj={};headers.forEach(function(h,idx){obj[h]=(r[idx]||'').trim();});return obj;});renderPreview(headers);document.getElementById('import-btn').disabled=parsedRows.length===0;};reader.readAsText(f);});
 function renderPreview(headers){var html='<table><tr>'+headers.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr>';parsedRows.slice(0,8).forEach(function(row){html+='<tr>'+headers.map(function(h){var v=row[h]||'';var bad=VALID[h]&&v&&VALID[h].indexOf(v)===-1;return '<td'+(bad?" class='warn'":'')+'>'+(v||'&mdash;')+(bad?' ?':'')+'</td>';}).join('')+'</tr>';});html+='</table><p class=\'muted\'>'+parsedRows.length+' row(s) parsed. Showing first 8.</p>';document.getElementById('preview-wrap').innerHTML=html;}
@@ -130,14 +134,65 @@ function buildProps(row){var props={};Object.keys(row).forEach(function(k){var v
 function logLine(id,text){var el=document.getElementById(id);el.textContent+=(el.textContent?'\n':'')+text;}
 document.getElementById('import-btn').addEventListener('click',function(){document.getElementById('import-btn').disabled=true;document.getElementById('import-log').textContent='';var i=0;var done=0,failed=0;
 function next(){if(i>=parsedRows.length){logLine('import-log','Done. '+done+' imported, '+failed+' failed.');document.getElementById('import-btn').disabled=false;loadCandidates();return;}var row=parsedRows[i];api('/api/candidates',{method:'POST',body:JSON.stringify({properties:buildProps(row)})}).then(function(){done++;logLine('import-log','Row '+(i+1)+'/'+parsedRows.length+' imported.');}).catch(function(err){failed++;logLine('import-log','Row '+(i+1)+' failed: '+err);}).then(function(){i++;next();});}next();});
-function loadCandidates(){document.getElementById('count-badge').textContent='Loading…';api('/api/candidates').then(function(res){allCandidates=(res.results||[]).map(function(r){return{id:r.id,name:r.Name||'',role:r['Current role']||'',company:r['Current company']||'',fn:r.Function||'',sen:r.Seniority||'',ind:r.Industry||'',loc:r.Location||'',status:r['Relationship status']||'',strategic:r['Strategic score'],execution:r['Execution score'],influence:r['Influence score'],strengths:r['CliftonStrengths top domains']||'',notes:r['Assessment notes']||'',consent:r['Consent contact preference']||''};});document.getElementById('count-badge').textContent=allCandidates.length+' candidates';applyFilters();}).catch(function(err){document.getElementById('count-badge').textContent='Error';});}
-function applyFilters(){var q=document.getElementById('q').value.toLowerCase();var fn=document.getElementById('f-function').value;var sen=document.getElementById('f-seniority').value;var ind=document.getElementById('f-industry').value;var status=document.getElementById('f-status').value;
-var filtered=allCandidates.filter(function(c){if(q&&[c.name,c.role,c.company].join(' ').toLowerCase().indexOf(q)===-1)return false;if(fn&&c.fn!==fn)return false;if(sen&&c.sen!==sen)return false;if(ind&&c.ind!==ind)return false;if(status&&c.status!==status)return false;return true;});
-document.getElementById('result-count').textContent=filtered.length+' candidate(s) found';var wrap=document.getElementById('results');wrap.innerHTML='';filtered.forEach(function(c){var div=document.createElement('div');div.className='result-row';
-div.innerHTML="<div><div>"+(c.name||'(no name)')+"</div><div class='muted'>"+c.role+(c.company?' — '+c.company:'')+"</div></div><span class='pill'>"+(c.status||'—')+"</span>";
-div.addEventListener('click',function(){var d=document.getElementById('c-detail');d.style.display='block';d.innerHTML='<strong>'+c.name+'</strong><div class=\'muted\' style=\'margin:4px 0 8px;\'>'+[c.fn,c.sen,c.ind,c.loc].filter(Boolean).join(' · ')+'</div><div>Scores — strategic '+(c.strategic??'—')+', execution '+(c.execution??'—')+', influence '+(c.influence??'—')+'</div><div style=\'margin-top:6px;\'>Strengths: '+(c.strengths||'—')+'</div><div style=\'margin-top:6px;\'>Notes: '+(c.notes||'—')+'</div>';});wrap.appendChild(div);});}
-['q','f-function','f-seniority','f-industry','f-status'].forEach(function(id){document.getElementById(id).addEventListener('input',applyFilters);document.getElementById(id).addEventListener('change',applyFilters);});
+
+function loadCandidates(){document.getElementById('count-badge').textContent='Loading…';api('/api/candidates').then(function(res){allCandidates=res.results||[];document.getElementById('count-badge').textContent=allCandidates.length+' candidates';applyFilters();}).catch(function(err){document.getElementById('count-badge').textContent='Error';});}
+function applyFilters(){
+  var q=document.getElementById('q').value.toLowerCase();
+  var industry=document.getElementById('f-industry').value;
+  var stage=document.getElementById('f-stage').value;
+  var assess=document.getElementById('f-assessment').value;
+  var placement=document.getElementById('f-placement').value;
+  var filtered=allCandidates.filter(function(c){
+    if(q&&[c.Name,c['Current Position'],c['Current company']].join(' ').toLowerCase().indexOf(q)===-1)return false;
+    if(industry&&!(Array.isArray(c.Industry)&&c.Industry.indexOf(industry)!==-1))return false;
+    if(stage&&c['Recruitment Stage']!==stage)return false;
+    if(assess&&c['Assessment Status']!==assess)return false;
+    if(placement&&c['Placement Status']!==placement)return false;
+    return true;
+  });
+  document.getElementById('result-count').textContent=filtered.length+' candidate(s) found';
+  var wrap=document.getElementById('results');wrap.innerHTML='';
+  filtered.forEach(function(c){
+    var div=document.createElement('div');div.className='result-row';
+    div.innerHTML="<div><div>"+(c.Name||'(no name)')+"</div><div class='muted'>"+(c['Current Position']||'')+(c['Current company']?' — '+c['Current company']:'')+"</div></div><span class='pill'>"+(c['Recruitment Stage']||'—')+"</span>";
+    div.addEventListener('click',function(){renderDetail(c);});
+    wrap.appendChild(div);
+  });
+}
+['q','f-industry','f-stage','f-assessment','f-placement'].forEach(function(id){document.getElementById(id).addEventListener('input',applyFilters);document.getElementById(id).addEventListener('change',applyFilters);});
 document.getElementById('refresh-c-btn').addEventListener('click',loadCandidates);
+
+function field(label,val){if(val===undefined||val===null||val==='')val='—';if(Array.isArray(val))val=val.length?val.join(', '):'—';return "<div><span>"+label+"</span>"+val+"</div>";}
+function renderDetail(c){
+  var d=document.getElementById('c-detail');d.style.display='block';
+  var html='<strong style="font-size:15px;">'+(c.Name||'')+'</strong> <span class="muted">'+(c['Current Position']||'')+(c['Current company']?' — '+c['Current company']:'')+'</span>';
+  html+='<div class="dsec" style="margin-top:10px;"><h4>Summary</h4><div class="dgrid">'+
+    field('Target Position',c['Target Position'])+field('Client PIC',c['Client PIC'])+field('Recruitment Stage',c['Recruitment Stage'])+
+    field('Recruiter / PIC',c['Recruiter / PIC'])+field('Next Follow-up',c['Next Follow-up Date'])+field('Next Action',c['Next Follow-up Action'])+
+    field('Last Activity',c['Last Activity Date'])+field('Source',c['Source'])+'</div></div>';
+  html+='<div class="dsec"><h4>Profile</h4><div class="dgrid">'+
+    field('Phone',c['Phone'])+field('Email',c['Email'])+field('LinkedIn',c['LinkedIn'])+
+    field('Location',c['Location'])+field('Industry',c['Industry'])+field('Years Exp.',c['Years of Experience'])+
+    field('Education',c['Education'])+field('Notice Period',c['Notice Period / Availability'])+field('Age',c['Age'])+'</div></div>';
+  html+='<div class="dsec"><h4>Interview</h4><div class="dgrid">'+
+    field('R1',[c['Interview R1 Status'],c['Interview R1 Result']].filter(Boolean).join(' / '))+
+    field('R2',[c['Interview R2 Status'],c['Interview R2 Result']].filter(Boolean).join(' / '))+
+    field('Client HR',[c['Interview Client HR Status'],c['Interview Client HR Result']].filter(Boolean).join(' / '))+
+    field('Client User',[c['Interview Client User Status'],c['Interview Client User Result']].filter(Boolean).join(' / '))+
+    field('Final',[c['Interview Final Status'],c['Interview Final Result']].filter(Boolean).join(' / '))+'</div></div>';
+  html+='<div class="dsec"><h4>Assessment</h4><div class="dgrid">'+
+    field('Type',c['Assessment Type'])+field('Status',c['Assessment Status'])+field('Date',c['Assessment Date'])+
+    field('Security Check',c['Security Assessment Status'])+field('Result',c['Assessment Result'])+'</div></div>';
+  html+='<div class="dsec"><h4>Remuneration</h4><div class="dgrid">'+
+    field('Current Basic',c['Current Nett Basic Salary'])+field('Expected Basic',c['Expected Nett Basic Salary'])+field('Offered Package',c['Offered Salary & Package'])+
+    field('Final Salary',c['Final Salary'])+field('Offer Status',c['Offer Status'])+field('Placement Fee',c['Placement Fee'])+'</div></div>';
+  html+='<div class="dsec"><h4>Onboarding / Post-Placement</h4><div class="dgrid">'+
+    field('Joining Date',c['Joining Date'])+field('Onboarding Status',c['Onboarding Status'])+field('Placement Status',c['Placement Status'])+
+    field('Candidate Feedback',c['Candidate Feedback'])+field('Client Feedback',c['Client Feedback'])+'</div></div>';
+  if(c.url)html+='<div style="margin-top:6px;"><a href="'+c.url+'" target="_blank" rel="noopener noreferrer">Open in Notion</a></div>';
+  d.innerHTML=html;
+}
+
 var STAGES=['Mapping','Assessment','Shortlist','Placement'];var searches=[];var nameByUrl={};
 function loadSearches(){Promise.all([api('/api/searches'),api('/api/candidates')]).then(function(arr){var sRes=arr[0];var cRes=arr[1];nameByUrl={};(cRes.results||[]).forEach(function(c){nameByUrl[c.id]=c.Name||'Unnamed';});
 searches=(sRes.results||[]).map(function(r){return{id:r.id,url:r.url,name:r.Name||'(untitled)',client:r.Client||'',fn:r.Function||'',sen:r.Seniority||'',stage:r.Stage||'Mapping',due:r['Due date']||'',consultant:r.Consultant||'',candidateIds:r.Candidates||[]};});renderBoard();}).catch(function(err){document.getElementById('board').innerHTML="<p class='muted'>Error loading.</p>";});}
