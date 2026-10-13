@@ -7,7 +7,7 @@
    responses sheet.
 3. Open the edit link. Click the palette icon, choose **Upload header image**
    and pick `form_header.jpg`. Set the colour to `#F06424`.
-4. In `../email.html`, replace `FEEDBACK_FORM_LINK` with the share link.
+4. In `../email.html`, the feedback button links to https://forms.gle/ywFcxYitEyFk56uT7.
 5. Open the share link in a private window and submit a test answer. Then
    delete the test row from the responses sheet.
 
